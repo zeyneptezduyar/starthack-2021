@@ -25,28 +25,70 @@ class _EmailLogInState extends State<EmailLogIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("Login")),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-                child: Column(children: <Widget>[
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFF8F1F1),
+            Color(0xFF19456B),
+          ],
+        )),
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('SnackSnap',
+                  style: TextStyle(
+                    color: Color(0xff19456b),
+                    fontSize: 48,
+                  )),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            backgroundColor: Colors.transparent,
+            body: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Container(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Color(0xff19456b),
+                            fontSize: 48,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        labelText: "Enter Email Address",
+                        labelText: "Enter Email",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Enter Email Address';
+                          return 'Enter an Email Address';
                         } else if (!value.contains('@')) {
-                          return 'Please enter a valid email address!';
+                          return 'Please enter a valid email address';
                         }
                         return null;
                       },
@@ -60,6 +102,13 @@ class _EmailLogInState extends State<EmailLogIn> {
                       decoration: InputDecoration(
                         labelText: "Enter Password",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
@@ -77,21 +126,24 @@ class _EmailLogInState extends State<EmailLogIn> {
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: isLoading
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
-                      color: Colors.lightBlue,
+                      ? CircularProgressIndicator()
+                      : RaisedButton(
+                      color: Color(0xff33946A),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          logInToFb();
-                        }
-                      },
-                      child: Text('Submit'),
+                          if (_formKey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            logInToFb();
+                          }
+                        },
+                      child: Text('Submit',
+                          style: TextStyle(
+                            color: Color(0xffffffff),
+                          )),
                     ),
                   )
-                ]))));
+                ])))));
   }
 
   void logInToFb() {

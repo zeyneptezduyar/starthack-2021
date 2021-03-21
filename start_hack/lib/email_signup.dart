@@ -29,12 +29,47 @@ class _EmailSignUpState extends State<EmailSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("Sign Up")),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-                child: Column(children: <Widget>[
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFF8F1F1),
+            Color(0xFF19456B),
+          ],
+        )),
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('SnackSnap',
+                  style: TextStyle(
+                    color: Color(0xff19456b),
+                    fontSize: 48,
+                  )),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            backgroundColor: Colors.transparent,
+            body: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Container(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            color: Color(0xff19456b),
+                            fontSize: 48,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
@@ -42,6 +77,13 @@ class _EmailSignUpState extends State<EmailSignUp> {
                       decoration: InputDecoration(
                         labelText: "Enter User Name",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
@@ -61,6 +103,13 @@ class _EmailSignUpState extends State<EmailSignUp> {
                       decoration: InputDecoration(
                         labelText: "Enter Email",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
@@ -82,6 +131,13 @@ class _EmailSignUpState extends State<EmailSignUp> {
                       decoration: InputDecoration(
                         labelText: "Enter Age",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
@@ -89,25 +145,8 @@ class _EmailSignUpState extends State<EmailSignUp> {
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Enter Age';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      controller: weightController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Weight (in kg)",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Weight';
+                        } else if (int.parse(value) <= 0) {
+                          return 'Enter a valid age!';
                         }
                         return null;
                       },
@@ -121,6 +160,13 @@ class _EmailSignUpState extends State<EmailSignUp> {
                       decoration: InputDecoration(
                         labelText: "Enter Password",
                         enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
@@ -138,21 +184,21 @@ class _EmailSignUpState extends State<EmailSignUp> {
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: isLoading
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
-                      color: Colors.lightBlue,
+                      ? CircularProgressIndicator()
+                      : RaisedButton(
+                      color: Color(0xff33946A),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          registerToFb();
-                        }
-                      },
+                          if (_formKey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            registerToFb();
+                          }
+                        },
                       child: Text('Submit'),
                     ),
                   )
-                ]))));
+                ])))));
   }
 
   void registerToFb() {
