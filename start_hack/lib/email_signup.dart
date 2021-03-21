@@ -25,6 +25,7 @@ class _EmailSignUpState extends State<EmailSignUp> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController ageController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +97,25 @@ class _EmailSignUpState extends State<EmailSignUp> {
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
+                      controller: weightController,
+                      decoration: InputDecoration(
+                        labelText: "Enter Weight (in kg)",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      // The validator receives the text that the user has entered.
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enter Weight';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
                       obscureText: true,
                       controller: passwordController,
                       decoration: InputDecoration(
@@ -143,9 +163,9 @@ class _EmailSignUpState extends State<EmailSignUp> {
       dbRef.child(result.user.uid).set({
         "email": emailController.text,
         "age": ageController.text,
-        "name": nameController.text
+        "name": nameController.text,
+        "weight": weightController.text
       });
-      print("hi");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Home(uid: result.user.uid, camera: widget.camera)),
@@ -181,5 +201,6 @@ class _EmailSignUpState extends State<EmailSignUp> {
     emailController.dispose();
     passwordController.dispose();
     ageController.dispose();
+    weightController.dispose();
   }
 }

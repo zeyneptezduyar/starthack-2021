@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
+import 'package:http/http.dart' as http;
 import 'login.dart';
 import 'camera.dart';
 
@@ -19,13 +22,41 @@ class Home extends StatefulWidget {
   final String uid;
 
 
+
   @override
   _HomeState createState() => _HomeState();
 
 }
+void load() async{
+  var headers = {
+    'Content-Type': 'application/json'
+  };
+  var request = http.Request('GET', Uri.parse('https://starthack2021-default-rtdb.europe-west1.firebasedatabase.app/data.json'));
+  request.body = '''{\r\n    "hi":"work"\r\n}''';
+  request.headers.addAll(headers);
 
+  http.StreamedResponse response = await request.send();
+
+  if (response.statusCode == 200) {
+    print(await response.stream.bytesToString());
+  }
+  else {
+    print(response.reasonPhrase);
+  }
+
+}
   class _HomeState extends State<Home> {
   final String title = "Home";
+
+
+  @override
+  void initState(){
+    super.initState();
+
+    load();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,8 +80,197 @@ class Home extends StatefulWidget {
             )
           ],
         ),
-        body: Center(child: Text('Welcome!')),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Card(
+                clipBehavior: Clip.antiAlias,
+                  child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.arrow_drop_down_circle),
+                      title: const Text('Food entry: pasta'),
+                      subtitle: Text(
+                      'Food entered on 20/03',
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                      ),
+                      ),
+                      Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                      'You scanned this food',
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                      ),
+                      ),
+                  ],
+                ),
+              ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.arrow_drop_down_circle),
+                        title: const Text('Food entry: pasta'),
+                        subtitle: Text(
+                          'Food entered on 20/03',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'You scanned this food',
+                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => {
+          },
+        ),
         drawer: NavigateDrawer(uid: widget.uid, camera: widget.camera));
+
   }
 }
 
@@ -124,7 +344,7 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.camera, color: Colors.black),
+              icon: new Icon(Icons.camera_enhance, color: Colors.black),
               onPressed: () => null,
             ),
             title: Text('Camera'),

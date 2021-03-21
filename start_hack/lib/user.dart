@@ -1,6 +1,5 @@
-import 'package:firebase_database/firebase_database.dart';
+
 class User{
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
   String name;
   String id;
   bool isLoaded  = false;
