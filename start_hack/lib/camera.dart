@@ -10,8 +10,6 @@ import 'dart:math' show Random;
 
 import 'dart:async';
 import 'dart:io';
-
-
 import 'login.dart';
 import 'home.dart';
 
@@ -62,6 +60,7 @@ class _CameraState extends State<Camera> {
   Widget build(BuildContext context) {
     return  Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xff11698e),
           title: Text("Camera"),
           actions: <Widget>[
             IconButton(
@@ -74,76 +73,89 @@ class _CameraState extends State<Camera> {
                 auth.signOut().then((res) {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
+                      MaterialPageRoute(builder: (context) => SignUp(camera: widget.camera,)),
                           (Route<dynamic> route) => false);
                 });
               },
             )
           ],
         ),
+        backgroundColor: Colors.black,
         body: FutureBuilder<void>(
           future: _initializeControllerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               // If the Future is complete, display the preview.
-              return CameraPreview(_controller);
+              return AspectRatio(
+                  child: CameraPreview(_controller),
+                  aspectRatio: 9/16,
+              );
             } else {
               // Otherwise, display a loading indicator.
               return Center(child: CircularProgressIndicator());
             }
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.camera_alt),
-          // Provide an onPressed callback.
-          onPressed: () async {
+        floatingActionButton: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 75,
+            width: 75,
+            margin: EdgeInsets.fromLTRB(45, 0, 0, 50),
+            child: FloatingActionButton(
+              backgroundColor: Color(0xff11698e),
+              child: Icon(Icons.camera_alt),
+              // Provide an onPressed callback.
+              onPressed: () async {
 
-            // Take the Picture in a try / catch block. If anything goes wrong,
-            // catch the error.
-            try {
-              // Ensure that the camera is initialized.
-              await _initializeControllerFuture;
-
-
-              // Attempt to take a picture and get the file `image`
-              // where it was saved.
-              final image = await _controller.takePicture();
-
-              http.StreamedResponse response = await sendNudes(image?.path);
-
-
-              var res = await response.stream.bytesToString();
-              final Map parsed = json.decode(res);
-              var name = parsed['items'][0]['item']['name'];
-              var calories = parsed['items'][0]['item']['nutrition_facts'][0]['nutrition']['calories'];
+                // Take the Picture in a try / catch block. If anything goes wrong,
+                // catch the error.
+                try {
+                  // Ensure that the camera is initialized.
+                  await _initializeControllerFuture;
 
 
-              sendDic(name, calories, image?.path);
+                  // Attempt to take a picture and get the file `image`
+                  // where it was saved.
+                  final image = await _controller.takePicture();
 
-              String activities = computeActivity(calories);
+                  http.StreamedResponse response = await sendNudes(image?.path);
 
-              // If the picture was taken, display it on a new screen.
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Center(
-                    child: DisplayPictureScreen(
-                      // Pass the automatically generated path to
-                      // the DisplayPictureScreen widget.
-                      imagePath: image?.path,
-                      name: name,
-                      calories: calories,
-                      activities: activities,
+
+                  var res = await response.stream.bytesToString();
+                  final Map parsed = json.decode(res);
+                  var name = parsed['items'][0]['item']['name'];
+                  var calories = parsed['items'][0]['item']['nutrition_facts'][0]['nutrition']['calories'];
+
+
+                  sendDic(name, calories, image?.path);
+
+                  String activities = computeActivity(calories);
+
+                  // If the picture was taken, display it on a new screen.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Center(
+                        child: DisplayPictureScreen(
+                          // Pass the automatically generated path to
+                          // the DisplayPictureScreen widget.
+                          imagePath: image?.path,
+                          name: name,
+                          calories: calories,
+                          activities: activities,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
+                  );
 
-            } catch (e) {
-              // If an error occurs, log the error to the console.
-              print(e);
-            }
-          },
+                } catch (e) {
+                  // If an error occurs, log the error to the console.
+                  print(e);
+                }
+              },
+            ),
+          ),
         ),
         drawer: NavigateDrawer(uid: widget.uid, camera: widget.camera));
   }
@@ -153,8 +165,9 @@ void sendDic(String name, double cal, String path) async{
   var headers = {
     'Content-Type': 'application/json'
   };
+  var now = DateTime.now();
   var request = http.Request('POST', Uri.parse('https://starthack2021-default-rtdb.europe-west1.firebasedatabase.app/data.json'));
-  request.body = '''{\r\n    "img":"$path",\r\n    "name":"$name",\r\n    "calories":$cal\r\n}''';
+  request.body = '''{\r\n    "img":"$path",\r\n    "time":"$now",\r\n    "name":"$name",\r\n    "calories":$cal\r\n}''';
   request.headers.addAll(headers);
 
   http.StreamedResponse response = await request.send();
@@ -224,37 +237,97 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Results')),
+      appBar: AppBar(backgroundColor:Color(0xff11698e),title: Text('Results')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Center(
-          child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                  margin: const EdgeInsets.only(top: 10.0),
-                  child: Column(
-                    children: [
-                      Image.file(File(imagePath)),
-                      Text('Name: $name'),
-                      Text('Has $calories calories'),
-                      Text(activities)
-                    ],
-                  ))
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+            colors: [
+              Color(0xfff8f1f1),
+              Color(0xff11698e),
+            ]
           )
+        ),
+        child: Center(
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: Column(
+                      children: [
+                        Container(
+
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 50),
+                            height: 400,
+                            child: Image.file(File(imagePath))),
+
+                      Container(
+                        margin: EdgeInsets.fromLTRB(30, 0, 30, 20),
+                        child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            color:  Color(0xfff8f1f1),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  title:  Text('$name',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 30
+
+                                    ),),
+                                  subtitle:Text('$calories calories',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff666666),
+                                        fontSize: 20
+
+                                    ),),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0,0,0,20),
+                                  child: ListTile(
+                                    title:  Text('Same As ...'),
+                                    subtitle:Text('$activities',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xff555555),
+                                          fontSize: 20
+
+                                      ),),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ),
+
+
+
+                      ],
+                    ))
+            )
+        ),
       ),
     );
   }
 }
 
+
 class NavigateDrawer extends StatefulWidget {
-  final String uid;
 
   final CameraDescription camera;
+
   const NavigateDrawer({
     Key key,
     this.uid,
     @required this.camera,
   }) : super (key: key);
+
+  final String uid;
+
   @override
   _NavigateDrawerState createState() => _NavigateDrawerState();
 }
@@ -266,43 +339,34 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountEmail: FutureBuilder(
-                future: FirebaseDatabase.instance
-                    .reference()
-                    .child("Users")
-                    .child(widget.uid)
-                    .once(),
-                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.value['email']);
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                }),
-            accountName: FutureBuilder(
-                future: FirebaseDatabase.instance
-                    .reference()
-                    .child("Users")
-                    .child(widget.uid)
-                    .once(),
-                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.value['name']);
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                }),
+          DrawerHeader(
+            child: Center(
+              child: Text(
+                'SnackSnap',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 40
+
+                ),
+              ),
+            ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+                color:  Color(0xff11698e)
             ),
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.home, color: Colors.black),
+              icon: new Icon(Icons.home, color: Color(0xff666666)),
               onPressed: () => null,
             ),
-            title: Text('Home'),
+            title: Text('Home',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
               Navigator.push(
@@ -313,10 +377,16 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.camera, color: Colors.black),
+              icon: new Icon(Icons.camera_enhance, color: Color(0xff666666)),
               onPressed: () => null,
             ),
-            title: Text('Camera'),
+            title: Text('Camera',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
               Navigator.push(
@@ -327,10 +397,16 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.settings, color: Colors.black),
+              icon: new Icon(Icons.settings, color: Color(0xff666666),),
               onPressed: () => null,
             ),
-            title: Text('Settings'),
+            title: Text('Settings',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
             },
@@ -339,4 +415,5 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
       ),
     );
   }
+
 }

@@ -15,27 +15,9 @@ void main() async {
     debugShowCheckedModeBanner: false,
     title: 'SnackSnap',
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
+        fontFamily: 'Epilogue'
     ),
     home: SignUp( camera: firstCamera),
   ));
-}
-
-class MyApp extends StatelessWidget {
-  final CameraDescription camera;
-  const MyApp({
-    Key key,
-    @required this.camera,
-  }) : super (key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Meet Up',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SignUp( camera: camera),
-    );
-  }
 }

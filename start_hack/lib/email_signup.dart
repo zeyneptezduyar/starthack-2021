@@ -29,130 +29,211 @@ class _EmailSignUpState extends State<EmailSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("Sign Up")),
-        body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-                child: Column(children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "Enter User Name",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFF8F1F1),
+                Color(0xFF19456B),
+              ],
+            )),
+        child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 120,
+              title: Text('SnackSnap',
+                  style: TextStyle(
+                    color: Color(0xff19456b),
+                    fontSize: 48,
+                  )),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            backgroundColor: Colors.transparent,
+            body: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Container(
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Color(0xff19456b),
+                                fontSize: 48,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter User Name';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Email",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: "Enter User Name",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Color(0xffffffff),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter User Name';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter an Email Address';
-                        } else if (!value.contains('@')) {
-                          return 'Please enter a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      controller: ageController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Age",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: TextFormField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            labelText: "Enter Email",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Color(0xffffffff),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter an Email Address';
+                            } else if (!value.contains('@')) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Age';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      controller: weightController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Weight (in kg)",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: TextFormField(
+                          controller: ageController,
+                          decoration: InputDecoration(
+                            labelText: "Enter Age",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Color(0xffffffff),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Age';
+                            } else if (int.parse(value) <= 0) {
+                              return 'Enter a valid age!';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Weight';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        labelText: "Enter Password",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: TextFormField(
+                          controller: weightController,
+                          decoration: InputDecoration(
+                            labelText: "Enter Weight",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Color(0xffffffff),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Age';
+                            } else if (int.parse(value) <= 0) {
+                              return 'Enter a valid age!';
+                            }
+                            return null;
+                          },
                         ),
                       ),
-                      // The validator receives the text that the user has entered.
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Enter Password';
-                        } else if (value.length < 6) {
-                          return 'Password must be atleast 6 characters!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
-                      color: Colors.lightBlue,
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          registerToFb();
-                        }
-                      },
-                      child: Text('Submit'),
-                    ),
-                  )
-                ]))));
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: TextFormField(
+                          obscureText: true,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            labelText: "Enter Password",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Color(0xffffffff),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter Password';
+                            } else if (value.length < 6) {
+                              return 'Password must be atleast 6 characters!';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: isLoading
+                            ? CircularProgressIndicator()
+                            : Container(
+                              alignment: Alignment.centerRight,
+                              child: RaisedButton(
+                          color: Color(0xff33946A),
+                          onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                registerToFb();
+                              }
+                          },
+                          child: Text('Submit',
+                          style: TextStyle(
+                            color: Colors.white
+                          ),),
+                        ),
+                            ),
+                      )
+                    ])))));
   }
 
   void registerToFb() {

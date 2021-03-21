@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,6 +10,11 @@ import 'package:http/http.dart' as http;
 import 'login.dart';
 import 'camera.dart';
 
+class Loader {
+  static var isLoaded = false;
+  static var res = {
+  };
+}
 class Home extends StatefulWidget {
 
   final CameraDescription camera;
@@ -22,46 +28,93 @@ class Home extends StatefulWidget {
   final String uid;
 
 
-
   @override
   _HomeState createState() => _HomeState();
 
 }
-void load() async{
+Future<Map> loader() async {
+  http.StreamedResponse response = await load();
+  var res = await response.stream.bytesToString();
+  final Map parsed = json.decode(res);
+  Loader.isLoaded = true;
+  Loader.res = parsed;
+  return parsed;
+}
+Future<Object>  load() async{
   var headers = {
     'Content-Type': 'application/json'
   };
   var request = http.Request('GET', Uri.parse('https://starthack2021-default-rtdb.europe-west1.firebasedatabase.app/data.json'));
-  request.body = '''{\r\n    "hi":"work"\r\n}''';
+
   request.headers.addAll(headers);
 
   http.StreamedResponse response = await request.send();
 
-  if (response.statusCode == 200) {
-    print(await response.stream.bytesToString());
-  }
-  else {
-    print(response.reasonPhrase);
-  }
+  return response;
 
 }
-  class _HomeState extends State<Home> {
-  final String title = "Home";
 
+List<Widget> getList(){
+  //res.map((key, value) => Text(value[0]))
+
+
+  var a = List<Widget>();
+
+  Loader.res.forEach((key, value) {
+    a.add(
+      Card(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+            children: [
+              ListTile(
+              title:  Text("Food scanned: " + value['name']),
+              subtitle: Text(
+                "Contained " + value['calories'].toString() +  " calories!",
+                style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Image.file(File(value['img'])),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'You scanned this food at: ' + value['time'].toString(),
+                style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              ),
+            ),
+          ],
+        )));
+  });
+
+
+  return a;
+}
+  class _HomeState extends State<Home> {
+  final String title = "Snack Log";
+  var res;
 
   @override
   void initState(){
     super.initState();
 
-    load();
-
+    loader();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(title),
+          title: Text(title,
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Color(0xfff8f1f1),
+                fontSize: 30
+
+            ),),
+          backgroundColor: Color(0xff11698e),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -73,7 +126,7 @@ void load() async{
                 auth.signOut().then((res) {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
+                      MaterialPageRoute(builder: (context) => SignUp(camera: widget.camera,)),
                           (Route<dynamic> route) => false);
                 });
               },
@@ -84,190 +137,46 @@ void load() async{
           child: Center(
             child: Column(
               children: [
-                Card(
-                clipBehavior: Clip.antiAlias,
+                Container(
+                  margin: EdgeInsets.all(20),
                   child: Column(
+                    children: [
+                      Text("Welcome to the snack log!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xff666666),
+                            fontSize: 25,
+
+
+                        ),),
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Text("check out your logged snacks",
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xff000000),
+                            fontSize: 20,
+
+
+                          ),),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
                   children: [
-                    ListTile(
-                      leading: Icon(Icons.arrow_drop_down_circle),
-                      title: const Text('Food entry: pasta'),
-                      subtitle: Text(
-                      'Food entered on 20/03',
-                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                      ),
-                      ),
-                      Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                      'You scanned this food',
-                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                      ),
-                      ),
+                    Card(
+                    clipBehavior: Clip.antiAlias,
+                      child: Column(
+                      children: getList()
+
+                    ),
+                  )
                   ],
                 ),
-              ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.arrow_drop_down_circle),
-                        title: const Text('Food entry: pasta'),
-                        subtitle: Text(
-                          'Food entered on 20/03',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'You scanned this food',
-                          style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
               ],
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {
-          },
         ),
         drawer: NavigateDrawer(uid: widget.uid, camera: widget.camera));
 
@@ -297,43 +206,34 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountEmail: FutureBuilder(
-                future: FirebaseDatabase.instance
-                    .reference()
-                    .child("Users")
-                    .child(widget.uid)
-                    .once(),
-                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.value['email']);
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                }),
-            accountName: FutureBuilder(
-                future: FirebaseDatabase.instance
-                    .reference()
-                    .child("Users")
-                    .child(widget.uid)
-                    .once(),
-                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.value['name']);
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                }),
+          DrawerHeader(
+            child: Center(
+              child: Text(
+                  'SnackSnap',
+                   style: TextStyle(
+                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                     fontSize: 40
+
+                   ),
+              ),
+            ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color:  Color(0xff11698e)
             ),
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.home, color: Colors.black),
+              icon: new Icon(Icons.home, color: Color(0xff666666)),
               onPressed: () => null,
             ),
-            title: Text('Home'),
+            title: Text('Home',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
               Navigator.push(
@@ -344,10 +244,16 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.camera_enhance, color: Colors.black),
+              icon: new Icon(Icons.camera_enhance, color: Color(0xff666666)),
               onPressed: () => null,
             ),
-            title: Text('Camera'),
+            title: Text('Camera',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
               Navigator.push(
@@ -358,10 +264,16 @@ class _NavigateDrawerState extends State<NavigateDrawer> {
           ),
           ListTile(
             leading: new IconButton(
-              icon: new Icon(Icons.settings, color: Colors.black),
+              icon: new Icon(Icons.settings, color: Color(0xff666666),),
               onPressed: () => null,
             ),
-            title: Text('Settings'),
+            title: Text('Settings',
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xff666666),
+                  fontSize: 20
+
+              ),),
             onTap: () {
               print(widget.uid);
             },
