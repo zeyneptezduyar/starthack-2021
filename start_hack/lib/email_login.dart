@@ -28,6 +28,7 @@ class _EmailLogInState extends State<EmailLogIn> {
     return Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
+<<<<<<< HEAD
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
@@ -42,6 +43,20 @@ class _EmailLogInState extends State<EmailLogIn> {
                   style: TextStyle(
                     color: Color(0xff19456b),
                     fontWeight: FontWeight.w700,
+=======
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFF8F1F1),
+            Color(0xFF19456B),
+          ],
+        )),
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('SnackSnap',
+                  style: TextStyle(
+                    color: Color(0xff19456b),
+>>>>>>> 9b085bd3468e466b8f880489df733954990ddc89
                     fontSize: 48,
                   )),
               centerTitle: true,
@@ -53,6 +68,7 @@ class _EmailLogInState extends State<EmailLogIn> {
                 key: _formKey,
                 child: SingleChildScrollView(
                     child: Column(children: <Widget>[
+<<<<<<< HEAD
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
@@ -149,6 +165,101 @@ class _EmailLogInState extends State<EmailLogIn> {
                             ),
                       )
                     ])))));
+=======
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Container(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Color(0xff19456b),
+                            fontSize: 48,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: "Enter Email",
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      // The validator receives the text that the user has entered.
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enter an Email Address';
+                        } else if (!value.contains('@')) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: "Enter Password",
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffffffff),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      // The validator receives the text that the user has entered.
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Enter Password';
+                        } else if (value.length < 6) {
+                          return 'Password must be atleast 6 characters!';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: isLoading
+                      ? CircularProgressIndicator()
+                      : RaisedButton(
+                      color: Color(0xff33946A),
+                      onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            logInToFb();
+                          }
+                        },
+                      child: Text('Submit',
+                          style: TextStyle(
+                            color: Color(0xffffffff),
+                          )),
+                    ),
+                  )
+                ])))));
+>>>>>>> 9b085bd3468e466b8f880489df733954990ddc89
   }
 
   void logInToFb() {
